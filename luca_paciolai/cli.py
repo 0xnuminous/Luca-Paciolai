@@ -7,7 +7,7 @@ __all__ = ["app", "main", "add", "select_model"]
 
 import typer
 
-from .ledger import create_session, add_transaction
+from .ledger import create_session, add_transaction, list_accounts
 from .llm import parse_transaction
 from .models import Transaction
 from .model_selection import (
@@ -23,10 +23,10 @@ app = typer.Typer()
 def add(text: str) -> None:
     """Parse natural language transaction and save to the ledger."""
     session = create_session()
-    # TODO: load existing accounts
+    accounts = list_accounts(session)
     _model = load_selected_model()
     # TODO: pass `_model` to the LLM API when implemented
-    result = parse_transaction(text, [])
+    result = parse_transaction(text, accounts)
     tx = Transaction(**result)
     add_transaction(session, tx)
     typer.echo(json.dumps(result, indent=2, default=str))
