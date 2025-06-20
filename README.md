@@ -5,7 +5,7 @@ A command-line double-entry accounting system powered by an LLM. The tool parses
 ## Usage
 
 ```bash
-uv run main.py "I bought coffee today for $6"
+uv run main.py add "I bought coffee today for $6"
 ```
 
 Run the test suite with:
