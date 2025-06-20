@@ -11,6 +11,8 @@ def test_transaction_creation() -> None:
         credit="Assets:Cash",
         amount=6.0,
         currency="USD",
+        memo="morning run",
+        fee_amount=0.5,
     )
     assert tx.amount == 6.0
 
