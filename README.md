@@ -14,11 +14,3 @@ Run the test suite with:
 uv run python -m pytest -q
 ```
 
-## Adding dependencies
-
-Use `uv add` to manage new packages and update your lockfile. After adding, run `uv sync` to install them:
-
-```bash
-uv add typer
-uv sync
-```
