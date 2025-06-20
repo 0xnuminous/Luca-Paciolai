@@ -19,3 +19,7 @@ dev = [
 [tool.setuptools]
 packages = ["luca_paciolai"]
 
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+
