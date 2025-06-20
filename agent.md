@@ -26,19 +26,24 @@ Key directories:
 
 ## 2  Language & Tooling Conventions
 
-| Topic                                | Guideline                                                                                                                                         |                                                                                                                                                                                                              |                                                |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
-| **Python**                           | Target **Python 3.12** with full type‑hints.                                                                                                      |                                                                                                                                                                                                              |                                                |
-| **Dependency & environment manager** | Use **`uv` (Astral)** — it replaces pip/venv.<br>Install once:<br>\`curl -LsSf [https://astral.sh/uv/install.sh](https://astral.sh/uv/install.sh) | sh`.<br>Initialize project: `uv init .`(creates *pyproject.toml*, **.venv**, *uv.lock*).<br>Add deps:`uv add requests rich`.<br>Upgrade deps: `uv lock --upgrade-package requests`.<br>Sync env: `uv sync\`. |                                                |
-| **Running scripts**                  | In‑project: `uv run main.py`.<br>Stand‑alone: `uv run --no-project example.py`.<br>Ad‑hoc deps: `uv run --with rich example.py`.                  |                                                                                                                                                                                                              |                                                |
-| **Running tools / commands**         | Via project env: `uv run -- pytest -q` or `uv run -- ruff .`.<br>Shortcut form: `uv --tool pytest -q`.                                            |                                                                                                                                                                                                              |                                                |
-| **Formatting**                       | Run **Black** (`black -l 120`) and **Ruff**.                                                                                                      |                                                                                                                                                                                                              |                                                |
-| **Testing**                          | `uv run -- pytest -q` and optionally `pytest‑cov`. Tests must pass.                                                                               |                                                                                                                                                                                                              |                                                |
-| **Static analysis**                  | `uv run -- mypy --strict .` must succeed.                                                                                                         |                                                                                                                                                                                                              |                                                |
-| **Commits**                          | *Do not create new branches.* After code edits:<br>\`pre-commit run --all-files && git add -u && git commit -m "\<feat                            | fix                                                                                                                                                                                                          | docs>: …"`<br>`git status\` **must be clean**. |
-| **Docs**                             | Update AGENTS.md or docstrings when behavior changes.                                                                                             |                                                                                                                                                                                                              |                                                |
-
----
+* **Python** — target Python 3.12 with full type hints.
+* **Dependency manager** — use [`uv`](https://astral.sh) exclusively.
+  * Install: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+  * Initialize project: `uv init .` (creates `pyproject.toml`, `.venv`, `uv.lock`)
+  * Add deps: `uv add <package>`
+  * Upgrade deps: `uv lock --upgrade-package <package>`
+  * Sync env: `uv sync`
+  * **Never** call `uv pip`.
+* **Running scripts** — `uv run main.py`.
+  * Stand‑alone: `uv run --no-project script.py`
+  * Extra deps: `uv run --with rich script.py`
+* **Running tools** — `uv run -- pytest -q` or `uv run -- ruff .`.
+  * When using the **context7** environment you may run tools via `uvx`, e.g. `uvx ruff .`.
+* **Formatting** — use Black (`black -l 120`) and Ruff.
+* **Testing** — `uv run -- pytest -q`.
+* **Static analysis** — `uv run -- mypy --strict .`.
+* **Commits** — do not create new branches. After edits run `pre-commit run --all-files && git add -u && git commit -m "<feat|fix|docs>: …"` and ensure `git status` is clean.
+* **Docs** — update `AGENTS.md` or docstrings when behavior changes.
 
 ## 3  Journal & Tax‑Lot Specification  Journal & Tax‑Lot Specification
 
@@ -113,3 +118,76 @@ If a PR message is required, use:
 ---
 
 Happy Accounting! 🧮
+
+---
+
+## Build Specification
+
+Here’s the tighter, fully-merged prompt describing the desired system.
+
+### Prompt for the Coding Agent
+
+You are building a **command-line double-entry accounting system** that parses **plain-English transactions** via an LLM and writes balanced journal entries to a ledger.
+
+### 1️⃣ Natural-Language Parsing (LLM)
+* Accept inputs such as "I bought coffee today at Starbucks for $6." or "I sold bitcoin today for 100." and return structured JSON:
+
+```json
+{
+  "date": "2025-06-19",
+  "description": "Coffee at Starbucks",
+  "debit": "Expenses:Coffee",
+  "credit": "Assets:Cash",
+  "amount": 6.00,
+  "currency": "USD",
+  "instrument": null,
+  "quantity": null,
+  "price": null
+}
+```
+
+### 2️⃣ Chart of Accounts Logic
+| Step | Rule |
+| --- | --- |
+| **Boot** | Pre-seed only the five roots: `Assets, Liabilities, Equity, Income, Expenses`. |
+| **Discovery** | If the LLM-parsed debit or credit sub-account does not yet exist, prompt: `Account 'Expenses:Coffee' does not exist. Create? [Y/n]` |
+| **Action** | `Y/Enter` → create sub-account & continue. `n` → allow user to type another account or abort. |
+| **Persistence** | Once created, sub-accounts live in the persistent store (SQLite/JSON/Beancount). |
+
+### 3️⃣ Investment & Tax-Lot Logic
+1. **Lot Requirement** — every investment transaction must reference a tax lot `{lot_id}`.
+2. **Existing-Lot Check** — when an instrument is present, locate an open lot using the user’s default lot-selection method. If none found, prompt:
+   `No tax lot on record for BTC purchased on 2025-06-19 @ $1800/BTC (quantity 0.5). ➜ Create new tax lot? [Y/n]`
+3. **Lot Creation Workflow** — on `Y/Enter` assign a unique `lot_id` and store `{instrument, acquisition_date, quantity, cost_basis_per_unit, total_cost}`. On `n` allow manual `lot_id` selection or cancel.
+4. **Sale / Closing Lots** — when selling, identify lot(s) to close, compute realized gain/loss, and record remaining quantities for partial closures.
+
+### 4️⃣ Double-Entry Ledger Engine
+* Post journal entries only after both account and lot confirmations succeed.
+* Validate that total debits equal total credits for each transaction.
+
+### 5️⃣ Multi-Currency & Commodity Handling
+* Store the original currency and quantity; translate to a base currency for reports using stored or user-provided FX rates.
+
+### 6️⃣ CLI Interaction Flow (Illustrative)
+```
+$ ledger add "Bought 0.5 BTC for $18,000"
+> Parsed:
+  Debit Assets:Crypto:BTC (Qty 0.5)           $18,000
+  Credit Assets:Cash                          $18,000
+  Date: 2025-06-19
+
+Account 'Assets:Crypto:BTC' does not exist. Create? [Y/n] Y
+No tax lot on record for BTC acquired 2025-06-19 (0.5 @ $18,000). Create tax lot? [Y/n] Y
+Lot ID BTC-20250619-001 created.
+Transaction saved.
+```
+
+### 7️⃣ Reports & Extras (Optional)
+* Balance Sheet, Income Statement, Tax-Lot Register, Realized & Unrealized Gains, XIRR, TWRR.
+* CSV/API importers, encrypted storage, vendor auto-categorization, CLI auto-complete.
+
+### Deliverables
+* CLI app
+* LLM prompt schema & caching layer
+* Persistent ledger & tax-lot store
+* Unit tests for: parsing, account creation workflow, lot creation & gain/loss math, double-entry balancing
