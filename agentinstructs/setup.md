@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Codex setup script
+# This file is executed automatically when Codex spins up the docker
+# container for this project. It installs the **uv** package manager,
+# synchronizes dependencies and runs basic quality checks.
 set -euo pipefail
 
 # Optional: debug trace output
@@ -32,7 +36,7 @@ echo "🔄 Syncing dependencies..."
 uv sync
 
 # Install dev tooling
-echo "🧰 Installing dev tools: mypy, ruff, rich, pre-commit, pytest-cov..."
+echo "🧰 Installing dev tools: mypy, ruff, rich, pre-commit, pytest, pytest-cov..."
 uv pip install mypy ruff rich pre-commit pytest pytest-cov
 
 # Pre-commit hook setup (if available)
@@ -43,13 +47,13 @@ fi
 
 # Run static checks
 echo "🧪 Running static checks..."
-ruff check src || true
-mypy src || true
+ruff check luca_paciolai || true
+mypy luca_paciolai || true
 
 # Run tests if available
 if [ -d tests ]; then
   echo "🧪 Running tests..."
-  uv run -- pytest -q --cov=src --cov-report=term-missing
+  uv run python -m pytest -q --cov=luca_paciolai --cov-report=term-missing
 else
   echo "⚠️  No tests directory found. Skipping tests."
 fi

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from sqlmodel import SQLModel, Session, create_engine
 
-from .models import Transaction, TaxLot
+from .models import Transaction
 
 
 def init_db(db_url: str) -> Session:
