@@ -5,7 +5,7 @@ from sqlmodel import Field, SQLModel
 
 __all__ = ["Transaction", "TaxLot"]
 
-class Transaction(SQLModel, table=True):
+class Transaction(SQLModel, table=True):  # type: ignore[call-arg]
     """A double-entry journal entry."""
     id: Optional[int] = Field(default=None, primary_key=True)
     date: date
@@ -20,7 +20,7 @@ class Transaction(SQLModel, table=True):
     lot_id: Optional[str] = None
 
 
-class TaxLot(SQLModel, table=True):
+class TaxLot(SQLModel, table=True):  # type: ignore[call-arg]
     """Represents an investment acquisition lot."""
     id: Optional[int] = Field(default=None, primary_key=True)
     lot_id: str
