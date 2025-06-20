@@ -3,7 +3,7 @@ from typing import Optional
 
 from sqlmodel import Field, SQLModel
 
-__all__ = ["Transaction", "TaxLot"]
+__all__ = ["Transaction", "TaxLot", "Account"]
 
 class Transaction(SQLModel, table=True):  # type: ignore[call-arg]
     """A double-entry journal entry."""
@@ -38,3 +38,10 @@ class TaxLot(SQLModel, table=True):  # type: ignore[call-arg]
     quantity: float
     cost_basis_per_unit: float
     acquisition_date: date
+
+
+class Account(SQLModel, table=True):  # type: ignore[call-arg]
+    """Represents an account in the chart of accounts."""
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str
