@@ -9,6 +9,7 @@ dependencies = [
     "pydantic>=2.11.7",
     "sqlmodel>=0.0.24",
     "typer>=0.16.0",
+    "requests>=2.31.0",
 ]
 
 [dependency-groups]

@@ -8,6 +8,12 @@ A command-line double-entry accounting system powered by an LLM. The tool parses
 uv run main.py "I bought coffee today for $6"
 ```
 
+Select a Venice model for LLM parsing:
+
+```bash
+uv run main.py select-model
+```
+
 Run the test suite with:
 
 ```bash
