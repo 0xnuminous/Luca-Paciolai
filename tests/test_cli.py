@@ -22,6 +22,8 @@ def test_add_command_persists_transaction(monkeypatch):
     captured = {}
 
     monkeypatch.setattr(cli, "create_session", lambda: SimpleNamespace())
+    monkeypatch.setattr(cli, "get_account_names", lambda session: [])
+    monkeypatch.setattr(cli, "ensure_accounts", lambda session, names: None)
 
     def fake_add_transaction(session, tx):
         captured["tx"] = tx
