@@ -1,4 +1,5 @@
 Refer to `agentinstructs/` for detailed usage instructions and the complete functional specification (`SPEC.md`).
+Outstanding implementation tasks are tracked in `agentinstructs/TODO.md`.
 Additional Venice integration tips are documented in `agentinstructions/venice_best_practices.md`.
 
 ## Engineering Guide
