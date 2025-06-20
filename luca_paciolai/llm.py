@@ -1,12 +1,12 @@
-"""Simple natural language parser for transactions."""
+"""OpenAI-powered transaction parser."""
 from __future__ import annotations
 
-import re
-from datetime import date
-from typing import Dict, Sequence, Any
+import json
+from typing import Any, Dict, Sequence
 
-__all__ = ["parse_transaction", "extract_amount", "SCHEMA"]
+import openai
 
+__all__ = ["parse_transaction", "SCHEMA"]
 
 SCHEMA = {
     "id": None,
@@ -33,40 +33,17 @@ SCHEMA = {
 }
 
 
-_AMOUNT_RE = re.compile(r"\$?(\d+(?:\.\d+)?)\s*dollars", re.IGNORECASE)
-
-
-def extract_amount(text: str) -> float:
-    """Return the first dollar amount mentioned in ``text``."""
-    match = _AMOUNT_RE.search(text)
-    if match:
-        return float(match.group(1))
-    return 0.0
-
-
 def parse_transaction(text: str, accounts: Sequence[str]) -> Dict[str, Any]:
-    """Naively parse a transaction statement without network access."""
-    amount = extract_amount(text)
-    return {
-        "id": None,
-        "date": date.today(),
-        "description": text,
-        "debit": "Expenses:Coffee",
-        "credit": "Assets:Cash",
-        "amount": amount,
-        "currency": "USD",
-        "instrument": None,
-        "quantity": None,
-        "unit_price": None,
-        "lot_id": None,
-        "fee_amount": None,
-        "fee_currency": None,
-        "fee_account": None,
-        "memo": None,
-        "reference_number": None,
-        "vendor": None,
-        "payment_method": None,
-        "tax_amount": None,
-        "tax_rate": None,
-        "reconciled": None,
-    }
+    """Parse a transaction statement using the OpenAI API."""
+    client = openai.OpenAI()
+    prompt = (
+        "Convert the following statement into JSON following this schema:"
+        f" {json.dumps(SCHEMA)}\nAccounts: {', '.join(accounts)}\n{text}"
+    )
+    resp = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}],
+        response_format={"type": "json_object"},
+    )
+    content = resp.choices[0].message.content
+    return json.loads(content)

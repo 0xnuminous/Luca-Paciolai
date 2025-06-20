@@ -8,6 +8,9 @@ A command-line double-entry accounting system powered by an LLM. The tool parses
 uv run main.py add "I bought coffee today for $6"
 ```
 
+Set the `OPENAI_API_KEY` environment variable before running commands. The
+parser sends statements to OpenAI's API.
+
 The ledger database path is configurable via ``luca_paciolai.config.LEDGER_PATH``.
 
 Select a Venice model for LLM parsing:
