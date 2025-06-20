@@ -11,3 +11,12 @@ uv run python -m pytest -q
 uvx ruff check luca_paciolai
 uv run mypy luca_paciolai  # optional; may fail due to missing stubs
 ```
+
+### Ruff Errors
+`ruff` enforces our Python style. If `uvx ruff check luca_paciolai` reports
+issues, fix them **before committing**. You can auto-apply many fixes with:
+
+```bash
+uvx ruff check --fix luca_paciolai
+```
+Manual edits may still be required for complex violations.
