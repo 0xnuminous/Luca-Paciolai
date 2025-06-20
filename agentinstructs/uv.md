@@ -170,9 +170,9 @@ Use `uvx` (alias for `uv tool run`) to run tools in isolated environments:
 ```bash
 # Run tools without installation
 uvx ruff check .
-uvx black src/
+uvx black luca_paciolai/
 uvx pytest
-uvx mypy src/
+uvx mypy luca_paciolai/
 
 # Run specific version
 uvx ruff@0.3.0 check .
@@ -334,13 +334,13 @@ WORKDIR /app
 
 # Copy project files
 COPY pyproject.toml uv.lock ./
-COPY src/ ./src/
+COPY luca_paciolai/ ./luca_paciolai/
 
 # Install dependencies
 RUN uv sync --locked --no-editable
 
 # Run application
-CMD ["/app/.venv/bin/python", "-m", "src.main"]
+CMD ["/app/.venv/bin/python", "main.py"]
 ```
 
 ### GitHub Actions Integration
@@ -412,7 +412,7 @@ uv run pytest
 
 # For tools, use uvx
 uvx ruff check .
-uvx black src/
+uvx black luca_paciolai/
 ```
 
 ### 4. Environment Synchronization
@@ -438,13 +438,13 @@ Use uvx for ephemeral tool execution:
 # Linting and formatting
 uvx ruff check .
 uvx ruff format .
-uvx black src/
+uvx black luca_paciolai/
 
 # Type checking
-uvx mypy src/
+uvx mypy luca_paciolai/
 
 # Security scanning
-uvx bandit -r src/
+uvx bandit -r luca_paciolai/
 ```
 
 ## Migration from Other Tools
@@ -492,7 +492,7 @@ uv sync --dev
 # 3. Test and lint
 uv run pytest
 uvx ruff check .
-uvx black src/
+uvx black luca_paciolai/
 
 # 4. Add new dependency
 uv add new-package
@@ -513,11 +513,11 @@ uv sync --locked --dev
 
 # Run quality checks
 uvx ruff check .
-uvx black --check src/
-uv run mypy src/
+uvx black --check luca_paciolai/
+uv run mypy luca_paciolai/
 
 # Run tests
-uv run pytest --cov=src
+uv run pytest --cov=luca_paciolai
 
 # Build package
 uv build
