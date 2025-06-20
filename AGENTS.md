@@ -1,5 +1,9 @@
 Refer to `agentinstructs/` for detailed usage instructions and the complete functional specification (`SPEC.md`).
 
+## Engineering Guide
+For an overview of the repository structure and module responsibilities, see
+`agentinstructs/engineering.md`.
+
 ## Environment Setup
 Codex automatically executes `agentinstructs/setup.md` when the Docker container starts. This script installs `uv`, syncs dependencies, and runs lint and test commands. You generally do not need to manually reinstall tooling.
 
