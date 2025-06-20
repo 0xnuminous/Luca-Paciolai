@@ -22,3 +22,20 @@ Run the test suite with:
 uv run python -m pytest -q
 ```
 
+### Using the Venice API
+
+`luca_paciolai.venice_client` provides a helper for interacting with Venice's
+OpenAI-compatible API:
+
+```python
+from luca_paciolai.venice_client import create_client, chat_completion
+
+client = create_client("your-api-key")
+response = chat_completion(
+    client,
+    [{"role": "user", "content": "Why is the sky blue?"}],
+    include_venice_system_prompt=False,
+)
+print(response)
+```
+
