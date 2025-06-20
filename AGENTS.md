@@ -8,6 +8,6 @@ Run these commands before committing changes:
 
 ```bash
 uv run python -m pytest -q
-uv run ruff check luca_paciolai
+uvx ruff check luca_paciolai
 uv run mypy luca_paciolai  # optional; may fail due to missing stubs
 ```

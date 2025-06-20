@@ -32,28 +32,27 @@ if [ ! -f pyproject.toml ]; then
 fi
 
 # Sync dependencies
-echo "🔄 Syncing dependencies..."
-uv sync
+echo "🔄 Syncing dependencies with development extras..."
+uv sync --dev
 
-# Install dev tooling
-echo "🧰 Installing dev tools: mypy, ruff, rich, pre-commit, pytest, pytest-cov..."
-uv pip install mypy ruff rich pre-commit pytest pytest-cov
+# Dev tooling runs via uvx; no installation needed
 
 # Pre-commit hook setup (if available)
 if [ -f .pre-commit-config.yaml ]; then
   echo "⚙️  Installing pre-commit hooks..."
-  pre-commit install
+  uvx pre-commit install
 fi
 
 # Run static checks
 echo "🧪 Running static checks..."
-ruff check luca_paciolai || true
-mypy luca_paciolai || true
+uvx ruff check luca_paciolai || true
+uv run mypy luca_paciolai || true
 
 # Run tests if available
 if [ -d tests ]; then
   echo "🧪 Running tests..."
-  uv run python -m pytest -q --cov=luca_paciolai --cov-report=term-missing
+  uv run --with pytest-cov python -m pytest -q \
+    --cov=luca_paciolai --cov-report=term-missing
 else
   echo "⚠️  No tests directory found. Skipping tests."
 fi
