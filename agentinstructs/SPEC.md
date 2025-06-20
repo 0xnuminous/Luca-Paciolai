@@ -70,6 +70,7 @@ It interprets the statement via LLM and converts it into a structured, double-en
 
 ```json
 {
+  "id": 1,
   "date": "YYYY-MM-DD",
   "description": "string",
   "debit": "Expenses:Coffee",
@@ -78,14 +79,24 @@ It interprets the statement via LLM and converts it into a structured, double-en
   "currency": "USD",
   "instrument": null,
   "quantity": null,
-  "price": null,
-  "lot_id": null
+  "unit_price": null,
+  "lot_id": null,
+  "fee_amount": null,
+  "fee_currency": null,
+  "fee_account": null,
+  "memo": null,
+  "reference_number": null,
+  "vendor": null,
+  "payment_method": null,
+  "tax_amount": null,
+  "tax_rate": null,
+  "reconciled": null
 }
 ```
 
 Fields:
 
-* `instrument`, `quantity`, `price`: only required for investment transactions.
+* `instrument`, `quantity`, `unit_price`: only required for investment transactions.
 * `lot_id`: must be generated or matched when an investment is recorded.
 
 ---
@@ -97,6 +108,7 @@ Fields:
 ```python
 @dataclass
 class Transaction:
+    id: int
     date: date
     description: str
     debit: str
@@ -105,8 +117,18 @@ class Transaction:
     currency: str
     instrument: Optional[str] = None
     quantity: Optional[float] = None
-    price: Optional[float] = None
+    unit_price: Optional[float] = None
     lot_id: Optional[str] = None
+    fee_amount: Optional[float] = None
+    fee_currency: Optional[str] = None
+    fee_account: Optional[str] = None
+    memo: Optional[str] = None
+    reference_number: Optional[str] = None
+    vendor: Optional[str] = None
+    payment_method: Optional[str] = None
+    tax_amount: Optional[float] = None
+    tax_rate: Optional[float] = None
+    reconciled: Optional[bool] = None
 ```
 
 ### TaxLot

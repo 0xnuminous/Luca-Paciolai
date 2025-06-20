@@ -16,8 +16,18 @@ class Transaction(SQLModel, table=True):
     currency: str
     instrument: Optional[str] = None
     quantity: Optional[float] = None
-    price: Optional[float] = None
+    unit_price: Optional[float] = None
     lot_id: Optional[str] = None
+    fee_amount: Optional[float] = None
+    fee_currency: Optional[str] = None
+    fee_account: Optional[str] = None
+    memo: Optional[str] = None
+    reference_number: Optional[str] = None
+    vendor: Optional[str] = None
+    payment_method: Optional[str] = None
+    tax_amount: Optional[float] = None
+    tax_rate: Optional[float] = None
+    reconciled: Optional[bool] = None
 
 
 class TaxLot(SQLModel, table=True):

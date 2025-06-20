@@ -7,6 +7,7 @@ from typing import Dict
 
 
 SCHEMA = {
+    "id": None,
     "date": "YYYY-MM-DD",
     "description": "string",
     "debit": "Expenses:Coffee",
@@ -15,8 +16,18 @@ SCHEMA = {
     "currency": "USD",
     "instrument": None,
     "quantity": None,
-    "price": None,
+    "unit_price": None,
     "lot_id": None,
+    "fee_amount": None,
+    "fee_currency": None,
+    "fee_account": None,
+    "memo": None,
+    "reference_number": None,
+    "vendor": None,
+    "payment_method": None,
+    "tax_amount": None,
+    "tax_rate": None,
+    "reconciled": None,
 }
 
 
@@ -32,6 +43,7 @@ def parse_transaction(text: str, accounts: list[str]) -> Dict:
     """Naively parse a transaction statement without network access."""
     amount = _extract_amount(text)
     return {
+        "id": None,
         "date": date.today(),
         "description": text,
         "debit": "Expenses:Coffee",
@@ -40,6 +52,16 @@ def parse_transaction(text: str, accounts: list[str]) -> Dict:
         "currency": "USD",
         "instrument": None,
         "quantity": None,
-        "price": None,
+        "unit_price": None,
         "lot_id": None,
+        "fee_amount": None,
+        "fee_currency": None,
+        "fee_account": None,
+        "memo": None,
+        "reference_number": None,
+        "vendor": None,
+        "payment_method": None,
+        "tax_amount": None,
+        "tax_rate": None,
+        "reconciled": None,
     }
