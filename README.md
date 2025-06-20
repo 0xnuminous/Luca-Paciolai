@@ -19,10 +19,10 @@ Select a Venice model for LLM parsing:
 uv run main.py select-model
 ```
 
-Run the test suite with:
+Run the test suite with coverage:
 
 ```bash
-uv run python -m pytest -q
+uv run pytest --cov=luca_paciolai
 ```
 
 ### Using the Venice API
