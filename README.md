@@ -2,6 +2,19 @@
 
 A command-line double-entry accounting system powered by an LLM. The tool parses natural-language transactions, confirms accounts and tax lots, and stores entries in SQLite.
 
+## Installation
+
+Install the project dependencies into a local `.venv` directory using `uv`:
+
+```bash
+uv sync --dev
+```
+
+This command creates the environment and installs runtime and development
+packages specified in `pyproject.toml`. All subsequent commands, including
+`uv run main.py add ...`, require this initial sync so that `uv` can locate the
+dependencies.
+
 ## Usage
 
 ```bash
