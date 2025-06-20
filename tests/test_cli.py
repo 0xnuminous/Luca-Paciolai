@@ -2,6 +2,7 @@ import json
 from types import SimpleNamespace
 
 from typer.testing import CliRunner
+import typer
 
 from luca_paciolai import cli
 from luca_paciolai.models import Transaction
@@ -42,3 +43,33 @@ def test_add_command_persists_transaction(monkeypatch):
     assert captured["text"] == "I bought coffee for $5"
     assert isinstance(captured["tx"], Transaction)
     assert captured["tx"].amount == 5.0
+
+
+def test_select_model_valid_and_invalid(monkeypatch):
+    runner = CliRunner()
+
+    models = [
+        {"id": "a", "model_spec": {"name": "A"}},
+        {"id": "b", "model_spec": {"name": "B"}},
+    ]
+
+    monkeypatch.setattr(cli, "fetch_venice_models", lambda: models)
+
+    saved = {}
+
+    def fake_save(model_id: str) -> None:
+        saved["model"] = model_id
+
+    monkeypatch.setattr(cli, "save_selected_model", fake_save)
+
+    # Valid selection
+    monkeypatch.setattr(typer, "prompt", lambda *a, **kw: 2)
+    result = runner.invoke(cli.app, ["select-model"])
+    assert result.exit_code == 0
+    assert saved["model"] == "b"
+
+    # Invalid selection
+    monkeypatch.setattr(typer, "prompt", lambda *a, **kw: 3)
+    result = runner.invoke(cli.app, ["select-model"])
+    assert result.exit_code != 0
+    assert "Invalid selection." in result.stdout
