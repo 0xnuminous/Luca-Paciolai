@@ -34,8 +34,9 @@ uv follows a modern Python project workflow similar to poetry or rye:
 uv init example
 cd example
 
-# Add dependencies
+# Add dependencies (never use `pip install`)
 uv add requests pytest
+uv sync
 
 # Run commands in project environment
 uv run python main.py
@@ -43,9 +44,6 @@ uv run pytest
 
 # Create lockfile
 uv lock
-
-# Sync dependencies
-uv sync
 ```
 
 ### 2. Virtual Environment Management

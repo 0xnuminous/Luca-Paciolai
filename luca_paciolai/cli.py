@@ -22,7 +22,7 @@ def add(text: str) -> None:
     result = parse_transaction(text, [])
     tx = Transaction(**result)
     add_transaction(session, tx)
-    typer.echo(json.dumps(result, indent=2))
+    typer.echo(json.dumps(result, indent=2, default=str))
 
 
 def main() -> None:

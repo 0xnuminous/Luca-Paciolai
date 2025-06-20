@@ -1,12 +1,13 @@
-from dataclasses import dataclass
 from datetime import date
 from typing import Optional
 
+from sqlmodel import Field, SQLModel
+
 __all__ = ["Transaction", "TaxLot"]
 
-@dataclass
-class Transaction:
+class Transaction(SQLModel, table=True):
     """A double-entry journal entry."""
+    id: Optional[int] = Field(default=None, primary_key=True)
     date: date
     description: str
     debit: str
@@ -19,9 +20,9 @@ class Transaction:
     lot_id: Optional[str] = None
 
 
-@dataclass
-class TaxLot:
+class TaxLot(SQLModel, table=True):
     """Represents an investment acquisition lot."""
+    id: Optional[int] = Field(default=None, primary_key=True)
     lot_id: str
     instrument: str
     quantity: float
