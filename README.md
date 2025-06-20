@@ -8,6 +8,8 @@ A command-line double-entry accounting system powered by an LLM. The tool parses
 uv run main.py add "I bought coffee today for $6"
 ```
 
+The ledger database path is configurable via ``luca_paciolai.config.LEDGER_PATH``.
+
 Select a Venice model for LLM parsing:
 
 ```bash

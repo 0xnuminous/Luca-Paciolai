@@ -2,11 +2,12 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+
+__all__ = ["app", "main", "add", "select_model"]
 
 import typer
 
-from .ledger import init_db, add_transaction
+from .ledger import create_session, add_transaction
 from .llm import parse_transaction
 from .models import Transaction
 from .model_selection import (
@@ -16,13 +17,12 @@ from .model_selection import (
 )
 
 app = typer.Typer()
-DB_PATH = Path("ledger.db")
 
 
 @app.command()
 def add(text: str) -> None:
     """Parse natural language transaction and save to the ledger."""
-    session = init_db(f"sqlite:///{DB_PATH}")
+    session = create_session()
     # TODO: load existing accounts
     _model = load_selected_model()
     # TODO: pass `_model` to the LLM API when implemented

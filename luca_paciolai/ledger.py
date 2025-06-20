@@ -4,14 +4,23 @@ from __future__ import annotations
 
 from sqlmodel import SQLModel, Session, create_engine
 
+from .config import LEDGER_PATH
+
 from .models import Transaction
 
+__all__ = ["create_session", "init_db", "add_transaction"]
 
-def init_db(db_url: str) -> Session:
-    """Initializes the SQLite database and returns a session."""
-    engine = create_engine(db_url, echo=False)
+
+def create_session(db_url: str | None = None) -> Session:
+    """Return a database session, creating tables on first use."""
+    url = f"sqlite:///{LEDGER_PATH}" if db_url is None else db_url
+    engine = create_engine(url, echo=False)
     SQLModel.metadata.create_all(engine)
     return Session(engine)
+
+
+# Backwards compatibility
+init_db = create_session
 
 
 def add_transaction(session: Session, tx: Transaction) -> None:
