@@ -17,6 +17,19 @@ uv run python -m pytest -q
 uvx ruff check luca_paciolai
 uv run mypy luca_paciolai  # optional; may fail due to missing stubs
 ```
+### Constraints
+
+Guidelines
+
+    Keep code intuitive and user‑friendly.
+    Ensure new code merges cleanly and runs as expected.
+    Document usage clearly for end users.
+
+    Language: Python 3.12
+    Prioritise correctness over premature optimisation.
+    Every new feature must include its own tests.
+    Be creative and novel using first-principles thinking and coding.
+    Keep it simple.
 
 ### Ruff Errors
 `ruff` enforces our Python style. If `uvx ruff check luca_paciolai` reports
