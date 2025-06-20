@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import re
 from datetime import date
-from typing import Dict
+from typing import Dict, Sequence, Any
+
+__all__ = ["parse_transaction", "extract_amount", "SCHEMA"]
 
 
 SCHEMA = {
@@ -31,17 +33,20 @@ SCHEMA = {
 }
 
 
-def _extract_amount(text: str) -> float:
+_AMOUNT_RE = re.compile(r"\$?(\d+(?:\.\d+)?)\s*dollars", re.IGNORECASE)
+
+
+def extract_amount(text: str) -> float:
     """Return the first dollar amount mentioned in ``text``."""
-    match = re.search(r"\$?(\d+(?:\.\d+)?)\s*dollars", text, re.IGNORECASE)
+    match = _AMOUNT_RE.search(text)
     if match:
         return float(match.group(1))
     return 0.0
 
 
-def parse_transaction(text: str, accounts: list[str]) -> Dict:
+def parse_transaction(text: str, accounts: Sequence[str]) -> Dict[str, Any]:
     """Naively parse a transaction statement without network access."""
-    amount = _extract_amount(text)
+    amount = extract_amount(text)
     return {
         "id": None,
         "date": date.today(),

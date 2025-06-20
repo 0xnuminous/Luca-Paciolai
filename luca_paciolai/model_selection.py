@@ -6,7 +6,16 @@ from typing import Any, Dict, List
 
 import requests
 
-CONFIG_PATH = Path("model.json")
+from .config import MODEL_CONFIG_PATH
+
+__all__ = [
+    "fetch_venice_models",
+    "save_selected_model",
+    "load_selected_model",
+    "CONFIG_PATH",
+]
+
+CONFIG_PATH = MODEL_CONFIG_PATH
 
 
 def fetch_venice_models() -> List[Dict[str, Any]]:
@@ -24,13 +33,15 @@ def fetch_venice_models() -> List[Dict[str, Any]]:
     ]
 
 
-def save_selected_model(model_id: str) -> None:
+def save_selected_model(model_id: str, path: Path | None = None) -> None:
     """Persist the chosen model ID."""
-    CONFIG_PATH.write_text(json.dumps({"model": model_id}))
+    cfg_path = CONFIG_PATH if path is None else path
+    cfg_path.write_text(json.dumps({"model": model_id}))
 
 
-def load_selected_model() -> str | None:
+def load_selected_model(path: Path | None = None) -> str | None:
     """Return the currently selected model ID if stored."""
-    if CONFIG_PATH.exists():
-        return json.loads(CONFIG_PATH.read_text()).get("model")
+    cfg_path = CONFIG_PATH if path is None else path
+    if cfg_path.exists():
+        return json.loads(cfg_path.read_text()).get("model")
     return None
