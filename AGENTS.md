@@ -1,3 +1,4 @@
+See agentinstructs/ directory for additional instructions.
 1️⃣ Natural-Language Parsing (LLM)
 
     Input examples
