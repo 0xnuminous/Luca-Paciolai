@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import json
 
-__all__ = ["app", "main", "add", "select_model"]
+__all__ = ["app", "main", "add", "select_model", "notepad"]
 
 import typer
 
@@ -55,6 +55,26 @@ def select_model() -> None:
     selected = models[choice - 1]["id"]
     save_selected_model(selected)
     typer.echo(f"Selected model: {selected}")
+
+
+@app.command()
+def notepad() -> None:
+    """Interactive ASCII notepad for entering transactions."""
+    from prompt_toolkit import PromptSession
+    from prompt_toolkit.shortcuts import print_formatted_text
+    from prompt_toolkit.styles import Style
+    from prompt_toolkit.formatted_text import HTML
+
+    header = HTML(
+        "<ansimagenta>*******************************\n"
+        "* OKDSKEWL PSYCHO ANSI NOTEPAD *\n"
+        "*******************************</ansimagenta>"
+    )
+    print_formatted_text(header)
+    style = Style.from_dict({"prompt": "ansiyellow"})
+    session = PromptSession("\n> ", multiline=True, style=style)
+    text = session.prompt()
+    add(text)
 
 
 def main() -> None:

@@ -21,6 +21,12 @@ dependencies.
 uv run main.py add "I bought coffee today for $6"
 ```
 
+You can also launch a small ASCII notepad interface:
+
+```bash
+uv run main.py notepad
+```
+
 Set the `OPENAI_API_KEY` environment variable before running commands. The
 parser sends statements to OpenAI's API.
 
